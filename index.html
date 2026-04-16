@@ -3,16 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Momentum — AI in P&D</title>
+<title>PCI DSS Scope — PhorestPay</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap');
 
   :root {
     --accent: #10b981;
     --accent-warm: #f59e0b;
     --accent-red: #ef4444;
+    --accent-blue: #3b82f6;
     --bg-dark: #0a0a0a;
     --bg-card: rgba(255,255,255,0.04);
     --text-primary: #f0f0f0;
@@ -35,21 +36,21 @@
     line-height: 1.1;
   }
 
-  .reveal h1 { font-size: 3.2em; }
-  .reveal h2 { font-size: 2em; margin-bottom: 0.6em; }
-  .reveal h3 { font-size: 1.2em; color: var(--accent); font-weight: 600; margin-bottom: 0.4em; }
+  .reveal h1 { font-size: 3em; }
+  .reveal h2 { font-size: 1.9em; margin-bottom: 0.5em; }
+  .reveal h3 { font-size: 1.1em; color: var(--accent); font-weight: 600; margin-bottom: 0.4em; }
 
   .reveal p, .reveal li {
     font-weight: 300;
-    line-height: 1.6;
+    line-height: 1.55;
     color: #ccc;
   }
 
   .reveal strong { color: #fff; font-weight: 600; }
+  .reveal em { color: var(--accent-warm); font-style: normal; font-weight: 500; }
 
-  .reveal .slides section { text-align: left; padding: 40px 60px; }
+  .reveal .slides section { text-align: left; padding: 36px 56px; }
 
-  /* Title slide centering */
   .reveal .slides section.title-slide {
     text-align: center;
     display: flex !important;
@@ -58,13 +59,12 @@
     align-items: center;
   }
 
-  /* Accent line */
   .accent-line {
     width: 60px;
     height: 4px;
     background: linear-gradient(90deg, var(--accent), var(--accent-warm));
     border-radius: 2px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   .accent-line-center {
@@ -75,265 +75,264 @@
     margin: 0 auto 24px auto;
   }
 
-  /* Subtitle / tagline */
   .tagline {
-    font-size: 1.3em;
+    font-size: 1.25em;
     font-weight: 300;
     color: var(--text-muted);
     margin-top: 16px;
   }
 
   .subtitle {
-    font-size: 0.55em;
-    font-weight: 400;
+    font-size: 0.5em;
+    font-weight: 500;
     color: var(--accent);
-    letter-spacing: 0.15em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
-  /* Stat callouts */
-  .stat-row {
-    display: flex;
-    gap: 32px;
-    margin-top: 40px;
-  }
-
-  .stat-card {
-    flex: 1;
-    background: var(--bg-card);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 16px;
-    padding: 32px;
-    text-align: center;
-    transition: transform 0.3s ease;
-  }
-
-  .stat-card:hover { transform: translateY(-4px); }
-
-  .stat-number {
-    font-size: 2.8em;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--accent), var(--accent-warm));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-
-  .stat-label {
-    font-size: 0.6em;
-    color: var(--text-muted);
-    font-weight: 400;
-  }
-
-  /* Grid layout */
   .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-top: 32px;
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+    margin-top: 24px;
   }
 
   .grid-card {
     background: var(--bg-card);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 12px;
-    padding: 24px;
+    padding: 22px;
   }
 
-  .grid-card h3 { margin-top: 0; font-size: 1em; }
-  .grid-card p { font-size: 0.65em; margin: 0; color: #999; }
+  .grid-card h3 { margin-top: 0; font-size: 0.9em; }
+  .grid-card p { font-size: 0.62em; margin: 0; color: #bbb; line-height: 1.5; }
+  .grid-card .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.5em; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px; }
 
-  /* Leverage visual */
-  .leverage-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 60px;
-    margin-top: 32px;
+  /* Highlight card for the anchor position */
+  .anchor-card {
+    background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(245,158,11,0.08));
+    border: 1px solid rgba(16,185,129,0.35);
+    border-radius: 16px;
+    padding: 36px 40px;
+    margin-top: 20px;
   }
 
-  .leverage-stack {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
+  .anchor-card p { font-size: 1em; color: #fff; font-weight: 400; margin: 0; line-height: 1.45; }
+
+  /* Quote / opener callout */
+  .lead-quote {
+    font-size: 0.85em;
+    color: #ddd;
+    font-weight: 300;
+    border-left: 3px solid var(--accent);
+    padding: 6px 0 6px 22px;
+    margin: 20px 0 20px 0;
+    max-width: 95%;
+    line-height: 1.5;
   }
 
-  .leverage-block {
-    border-radius: 10px;
-    padding: 14px 0;
-    text-align: center;
-    font-weight: 600;
-    font-size: 0.6em;
-    color: #fff;
-    transition: all 0.3s ease;
-  }
-
-  .leverage-label {
-    font-size: 0.75em;
-    font-weight: 700;
-    margin-top: 12px;
-    letter-spacing: 0.05em;
-  }
-
-  .block-exp { background: #0d9488; }
-  .block-exec { background: #f59e0b; }
-  .block-rep { background: #ef4444; }
-
-  .arrow-between {
-    font-size: 2.5em;
-    color: var(--accent);
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 0.4; transform: translateX(0); }
-    50% { opacity: 1; transform: translateX(8px); }
-  }
-
-  /* List styling */
   .reveal ul { list-style: none; padding: 0; margin: 0; }
   .reveal ul li {
-    padding: 8px 0 8px 28px;
+    padding: 6px 0 6px 26px;
     position: relative;
-    font-size: 0.8em;
+    font-size: 0.72em;
   }
   .reveal ul li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 18px;
+    top: 16px;
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: var(--accent);
   }
 
-  /* Numbered items */
-  .numbered-item {
+  /* Architecture flow diagram */
+  .arch-flow {
     display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    margin-bottom: 20px;
+    align-items: stretch;
+    gap: 14px;
+    margin-top: 24px;
   }
 
-  .num-circle {
-    min-width: 44px;
-    height: 44px;
-    border-radius: 50%;
+  .arch-node {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+
+  .arch-node.stripe {
+    border-color: rgba(99,91,255,0.4);
+    background: rgba(99,91,255,0.08);
+  }
+
+  .arch-node.phorest {
+    border-color: rgba(16,185,129,0.35);
+    background: rgba(16,185,129,0.06);
+  }
+
+  .arch-node .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.48em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .arch-node .title {
+    font-size: 0.75em;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .arch-node .desc {
+    font-size: 0.55em;
+    color: #aaa;
+    line-height: 1.4;
+  }
+
+  .arch-arrow {
+    align-self: center;
+    color: var(--accent);
+    font-size: 1.4em;
+    opacity: 0.7;
+  }
+
+  /* Scope comparison */
+  .scope-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .scope-box {
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid;
+  }
+
+  .scope-box.broad {
+    background: rgba(239,68,68,0.05);
+    border-color: rgba(239,68,68,0.25);
+  }
+
+  .scope-box.narrow {
+    background: rgba(16,185,129,0.06);
+    border-color: rgba(16,185,129,0.35);
+  }
+
+  .scope-box h3 { font-size: 0.85em; margin-bottom: 8px; }
+  .scope-box.broad h3 { color: var(--accent-red); }
+  .scope-box.narrow h3 { color: var(--accent); }
+  .scope-box p { font-size: 0.6em; margin: 0 0 10px 0; color: #bbb; }
+  .scope-box ul li { font-size: 0.58em; padding: 3px 0 3px 20px; }
+  .scope-box ul li::before { top: 11px; width: 6px; height: 6px; }
+  .scope-box.broad ul li::before { background: var(--accent-red); }
+
+  /* Controls pills */
+  .control-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .control-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 10px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .control-icon {
+    min-width: 36px;
+    height: 36px;
+    border-radius: 8px;
     background: linear-gradient(135deg, var(--accent), #059669);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
-    font-size: 0.8em;
     color: #fff;
+    font-size: 0.7em;
   }
 
-  .num-text h3 { margin-bottom: 4px; }
-  .num-text p { font-size: 0.65em; margin: 0; }
+  .control-card h3 { font-size: 0.7em; margin: 0 0 3px 0; color: #fff; }
+  .control-card p { font-size: 0.55em; margin: 0; color: #aaa; line-height: 1.45; }
 
-  /* Metric pills */
-  .metric-row {
-    display: flex;
-    gap: 16px;
-    margin-top: 32px;
-    flex-wrap: wrap;
-  }
-
-  .metric-pill {
+  /* Option callout */
+  .option-card {
     background: var(--bg-card);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    border-radius: 100px;
-    padding: 12px 24px;
-    font-size: 0.65em;
-    font-weight: 500;
-    color: var(--accent);
+    border: 1px dashed rgba(59,130,246,0.4);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-top: 18px;
   }
 
-  /* Timeline */
-  .timeline {
-    position: relative;
-    margin-top: 28px;
-    padding-left: 32px;
-    border-left: 2px solid rgba(16, 185, 129, 0.3);
+  .option-card .option-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55em;
+    color: var(--accent-blue);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
   }
 
-  .timeline-item {
-    margin-bottom: 10px;
-    position: relative;
-  }
+  .option-card p { font-size: 0.7em; color: #ddd; margin: 0; }
 
-  .timeline-item::before {
-    content: '';
+  .slide-footer {
     position: absolute;
-    left: -39px;
-    top: 6px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 3px solid var(--bg-dark);
+    bottom: 20px;
+    left: 56px;
+    font-size: 0.38em;
+    color: #444;
+    font-weight: 400;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
   }
 
-  .timeline-item h3 { margin-bottom: 0; font-size: 0.7em; }
-  .timeline-item p { font-size: 0.55em; margin: 0; color: #999; }
+  .reveal .fragment { transition: all 0.4s ease; }
+  .reveal .progress { color: var(--accent); height: 3px; }
+  .reveal .slide-number { font-family: 'JetBrains Mono', sans-serif; font-size: 13px; color: #555; }
 
-  /* Closing slide */
   .big-quote {
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-weight: 300;
     line-height: 1.4;
     color: #ddd;
-    font-style: italic;
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     text-align: center;
   }
 
   .big-quote strong {
     font-weight: 700;
-    font-style: normal;
     background: linear-gradient(135deg, var(--accent), var(--accent-warm));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-
-  /* Risk cards */
-  .risk-card {
-    background: rgba(239, 68, 68, 0.06);
-    border: 1px solid rgba(239, 68, 68, 0.15);
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-bottom: 12px;
-  }
-
-  .risk-card h3 { color: var(--accent-warm); font-size: 0.85em; }
-  .risk-card p { font-size: 0.6em; margin: 0; }
-
-  /* Footer */
-  .slide-footer {
-    position: absolute;
-    bottom: 24px;
-    left: 60px;
-    font-size: 0.4em;
-    color: #444;
-    font-weight: 400;
-  }
-
-  /* Fragments */
-  .reveal .fragment { transition: all 0.4s ease; }
-
-  /* Progress bar */
-  .reveal .progress { color: var(--accent); height: 3px; }
-
-  /* Slide number */
-  .reveal .slide-number { font-family: 'Inter', sans-serif; font-size: 14px; color: #555; }
 </style>
 </head>
 <body>
@@ -343,223 +342,265 @@
   <!-- SLIDE 1: Title -->
   <section class="title-slide" data-transition="fade">
     <div class="accent-line-center"></div>
-    <h1 style="margin-bottom: 0;">Momentum</h1>
-    <p class="tagline">AI in Product & Development</p>
-    <p style="font-size: 0.5em; color: #555; margin-top: 40px;">First draft for feedback · March 2026</p>
+    <span class="subtitle">PCI DSS · PhorestPay</span>
+    <h1 style="margin-bottom: 0;">Scoping the CDE</h1>
+    <p class="tagline">Constraining PCI scope to the payment page environment</p>
+    <p style="font-size: 0.5em; color: #555; margin-top: 36px;">Discussion document · April 2026</p>
   </section>
 
-  <!-- SLIDE 2: The Opportunity -->
+  <!-- SLIDE 2: Level Set -->
   <section data-transition="slide">
     <div class="accent-line"></div>
-    <span class="subtitle">Why now</span>
-    <h2>The Opportunity<br>in Front of Us</h2>
-    <p style="font-size: 0.8em; max-width: 85%;">We are more than software. We're on a mission to build a stronger industry. Our biggest constraint has never been ideas — it's <strong>capacity</strong>. AI gives us a way to <strong>multiply our impact</strong>.</p>
+    <span class="subtitle">Level set</span>
+    <h2>Where We're Aligned</h2>
 
-    <div class="stat-row fragment" data-fragment-index="1">
-      <div class="stat-card">
-        <div class="stat-number">2</div>
-        <div class="stat-label">Key shifts have arrived</div>
+    <p class="lead-quote">We're aligned that PhorestPay is being treated as a <strong>service provider</strong> and that we'll need to go through a <strong>RoC</strong>. We're not trying to challenge that.</p>
+
+    <div class="anchor-card fragment">
+      <p>The key thing we want to get right is the <strong>definition of the Cardholder Data Environment</strong> — because that's what will determine the scale of the work across engineering.</p>
+    </div>
+
+    <p class="fragment" style="font-size: 0.7em; color: var(--text-muted); margin-top: 20px;">There is a very big difference between a <strong>tightly scoped payment surface</strong> and pulling large parts of our application and infrastructure into scope.</p>
+    <div class="slide-footer">01 · level set</div>
+  </section>
+
+  <!-- SLIDE 3: Architecture -->
+  <section data-transition="slide">
+    <div class="accent-line"></div>
+    <span class="subtitle">How it works today</span>
+    <h2>Our Payment Architecture</h2>
+
+    <div class="arch-flow">
+      <div class="arch-node phorest">
+        <span class="label">Phorest</span>
+        <div class="title">Payment Page</div>
+        <div class="desc">Next.js frontend serves the page. No CHD touches our code.</div>
       </div>
-      <div class="stat-card">
-        <div style="font-size: 0.75em; text-align: left; color: #ccc;">
-          <p style="margin: 0 0 12px 0;"><strong style="color: var(--accent);">1.</strong> Agentic development systems are here</p>
-          <p style="margin: 0;"><strong style="color: var(--accent-warm);">2.</strong> Quality threshold reached</p>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node stripe">
+        <span class="label">Stripe (CNP)</span>
+        <div class="title">Stripe Elements</div>
+        <div class="desc">Card data captured entirely within Stripe-hosted iframes.</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node stripe">
+        <span class="label">Stripe (CP)</span>
+        <div class="title">Stripe Terminal</div>
+        <div class="desc">Handles capture directly at the device.</div>
+      </div>
+    </div>
+
+    <div class="anchor-card fragment" style="margin-top: 26px; padding: 22px 28px;">
+      <p style="font-size: 0.85em;">At no point does Phorest <strong>store, process, or transmit</strong> cardholder data.</p>
+    </div>
+
+    <p class="fragment" style="font-size: 0.65em; color: var(--text-muted); margin-top: 16px;">However — we <strong>do serve the payment page</strong>, so we understand we're in scope for securing that environment.</p>
+    <div class="slide-footer">02 · architecture</div>
+  </section>
+
+  <!-- SLIDE 4: Core Position -->
+  <section data-transition="slide">
+    <div class="accent-line"></div>
+    <span class="subtitle">Our position · the anchor</span>
+    <h2>Constrain Scope to the Payment Page</h2>
+
+    <div class="anchor-card">
+      <p style="font-size: 1.15em;">We want to constrain scope to the <strong>payment page environment</strong> — rather than extending it across the broader application and backend systems.</p>
+    </div>
+
+    <div class="scope-compare fragment">
+      <div class="scope-box broad">
+        <h3>✗ Broad scope</h3>
+        <p>CDE expanded across the stack:</p>
+        <ul>
+          <li>Entire Next.js application</li>
+          <li>Backend services &amp; APIs</li>
+          <li>Supporting infrastructure</li>
+          <li>Large parts of engineering pulled in</li>
+        </ul>
+      </div>
+      <div class="scope-box narrow">
+        <h3>✓ Constrained scope</h3>
+        <p>CDE bounded to what serves the page:</p>
+        <ul>
+          <li>The payment page surface</li>
+          <li>Script delivery &amp; integrity</li>
+          <li>Strong controls around that surface</li>
+          <li>Backend remains out of scope</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-footer">03 · position</div>
+  </section>
+
+  <!-- SLIDE 5: Industry alignment -->
+  <section data-transition="slide">
+    <div class="accent-line"></div>
+    <span class="subtitle">Industry alignment</span>
+    <h2>Consistent With What We're Seeing</h2>
+
+    <p class="lead-quote">This is consistent with what we're seeing from other <strong>SaaS companies with similar architectures</strong> and their QSAs, where scope is constrained to the payment page rather than the full application.</p>
+
+    <div class="grid-3 fragment">
+      <div class="grid-card">
+        <span class="tag">Pattern</span>
+        <h3>Hosted iframes</h3>
+        <p>Card capture outsourced to a PCI-validated provider via iframes or SDK.</p>
+      </div>
+      <div class="grid-card">
+        <span class="tag">Pattern</span>
+        <h3>Page-level CDE</h3>
+        <p>CDE defined at the page that loads the iframe — not the whole app.</p>
+      </div>
+      <div class="grid-card">
+        <span class="tag">Pattern</span>
+        <h3>Backend out</h3>
+        <p>Orchestration services (e.g. PaymentIntent creation) remain out of scope.</p>
+      </div>
+    </div>
+    <div class="slide-footer">04 · industry</div>
+  </section>
+
+  <!-- SLIDE 6: PCI 4.x -->
+  <section data-transition="slide">
+    <div class="accent-line"></div>
+    <span class="subtitle">PCI DSS 4.x</span>
+    <h2>Where the Standard Is Moving</h2>
+
+    <p class="lead-quote">The focus has shifted more towards securing the <strong>payment page environment</strong> — script integrity, tamper prevention, monitoring — rather than broadly expanding scope where card data is fully outsourced.</p>
+
+    <div class="grid-3 fragment" style="margin-top: 28px;">
+      <div class="grid-card">
+        <span class="tag">6.4.3</span>
+        <h3>Script control</h3>
+        <p>Scripts on the payment page are inventoried, authorised, and integrity-assured.</p>
+      </div>
+      <div class="grid-card">
+        <span class="tag">11.6.1</span>
+        <h3>Tamper detection</h3>
+        <p>Change and tamper detection on the page — headers and script contents.</p>
+      </div>
+      <div class="grid-card">
+        <span class="tag">Direction</span>
+        <h3>Targeted, not broad</h3>
+        <p>Controls focus on the consumer-facing page, not the full backend.</p>
+      </div>
+    </div>
+
+    <p class="fragment" style="font-size: 0.65em; color: var(--text-muted); margin-top: 20px;">This is the same direction we want our scope to take — <strong>strong controls where the page lives</strong>, not scope sprawl across the stack.</p>
+    <div class="slide-footer">05 · pci 4.x</div>
+  </section>
+
+  <!-- SLIDE 7: Controls -->
+  <section data-transition="slide">
+    <div class="accent-line"></div>
+    <span class="subtitle">Our commitment</span>
+    <h2>Strong Controls Around the Page</h2>
+
+    <p style="font-size: 0.75em; color: #ccc; max-width: 92%;">We're not trying to avoid responsibility. We're proposing to put <strong>strong controls</strong> around the payment page.</p>
+
+    <div class="control-row">
+      <div class="control-card fragment">
+        <div class="control-icon">1</div>
+        <div>
+          <h3>Strict script control</h3>
+          <p>Allowlisted scripts, inventoried, version-pinned, integrity-verified.</p>
+        </div>
+      </div>
+      <div class="control-card fragment">
+        <div class="control-icon">2</div>
+        <div>
+          <h3>Restricted access &amp; deployment</h3>
+          <p>Tight change control on anything that touches the payment page.</p>
+        </div>
+      </div>
+      <div class="control-card fragment">
+        <div class="control-icon">3</div>
+        <div>
+          <h3>Monitoring &amp; tamper detection</h3>
+          <p>Runtime integrity checks, header monitoring, alerting on drift.</p>
+        </div>
+      </div>
+      <div class="control-card fragment">
+        <div class="control-icon">4</div>
+        <div>
+          <h3>Regular testing &amp; validation</h3>
+          <p>Penetration testing, script review, continuous validation of the surface.</p>
         </div>
       </div>
     </div>
-
-    <p class="fragment" style="font-size: 0.65em; color: var(--text-muted); margin-top: 24px;">The worst these models and tools will ever be is <strong>right now</strong>. Imagine 12 months from here.</p>
+    <div class="slide-footer">06 · controls</div>
   </section>
 
-  <!-- SLIDE 3: What is Momentum -->
+  <!-- SLIDE 8: Alternative option -->
   <section data-transition="slide">
     <div class="accent-line"></div>
-    <span class="subtitle">Our strategy</span>
-    <h2>What is Momentum?</h2>
-    <p style="font-size: 0.75em; max-width: 90%;">Momentum is PD getting ready for the future. It's about changing how we <strong>conceive, prototype, design, validate, build, run, secure, observe, measure</strong>, and <strong>scale</strong> what we create.</p>
+    <span class="subtitle">Option we're evaluating</span>
+    <h2>Stripe-Hosted Checkout</h2>
 
-    <div class="grid-2 fragment">
-      <div class="grid-card">
-        <h3>Not optional</h3>
-        <p>A fundamental shift in how software is built. We are moving from gradual adoption to deliberate, full embrace of AI in R&D.</p>
-      </div>
-      <div class="grid-card">
-        <h3>Not just engineering</h3>
-        <p>Product, Design, and Engineering. From how we shape ideas to how we deliver and learn from them.</p>
-      </div>
-      <div class="grid-card">
-        <h3>Better for everyone</h3>
-        <p>Customers get value faster. The company builds stronger. Teams deliver more. Individuals spend less time on toil and more on interesting problems.</p>
-      </div>
-      <div class="grid-card">
-        <h3>Claude is our platform</h3>
-        <p>We'll codify our engineering principles and culture into Claude's workflows, skills, tools and automation.</p>
-      </div>
+    <div class="option-card">
+      <span class="option-label">Option A · fallback</span>
+      <p>Moving to <strong>Stripe-hosted Checkout</strong> would remove our application from hosting the payment page entirely and <strong>materially reduce scope</strong>.</p>
     </div>
+
+    <div class="option-card fragment" style="border-color: rgba(16,185,129,0.4);">
+      <span class="option-label" style="color: var(--accent);">Option B · preferred — confirm first</span>
+      <p>Before going down that route, we'd like to understand whether we can achieve a <strong>similarly constrained scope</strong> with our current Elements-based approach.</p>
+    </div>
+
+    <p class="fragment" style="font-size: 0.65em; color: var(--text-muted); margin-top: 22px;">Both paths lead to a tightly scoped CDE. The question we want to answer together is which path the QSA is comfortable with.</p>
+    <div class="slide-footer">07 · options</div>
   </section>
 
-  <!-- SLIDE 4: Leverage visual -->
+  <!-- SLIDE 9: Technical proposal -->
   <section data-transition="slide">
     <div class="accent-line"></div>
-    <span class="subtitle">The shift</span>
-    <h2>AI Multiplies Our Leverage</h2>
+    <span class="subtitle">Technical proposal</span>
+    <h2>What We're Proposing</h2>
 
-    <div class="leverage-container">
-      <div class="leverage-stack">
-        <div class="leverage-block block-exp" style="width: 160px;">Experience</div>
-        <div class="leverage-block block-exec" style="width: 200px;">Execution</div>
-        <div class="leverage-block block-rep" style="width: 260px;">Repetitive &amp; Manual</div>
-        <div class="leverage-label" style="color: var(--text-muted);">Today</div>
+    <div class="grid-2" style="margin-top: 20px;">
+      <div class="grid-card" style="border-color: rgba(16,185,129,0.3);">
+        <span class="tag">Frontend · in scope</span>
+        <h3>Isolated payment page</h3>
+        <p>Isolate the payment page within the <strong>Next.js frontend</strong> as a controlled environment, with <strong>Stripe Elements</strong> handling all cardholder data capture.</p>
       </div>
-
-      <div class="arrow-between">→</div>
-
-      <div class="leverage-stack">
-        <div class="leverage-block block-exp" style="width: 300px;">Experience <span style="font-weight: 300; opacity: 0.8;">multiplied</span></div>
-        <div class="leverage-block block-exec" style="width: 240px;">Execution <span style="font-weight: 300; opacity: 0.8;">accelerated</span></div>
-        <div class="leverage-block block-rep" style="width: 160px; opacity: 0.7;">Manual <span style="font-weight: 300;">reduced</span></div>
-        <div class="leverage-label" style="color: var(--accent);">With AI</div>
+      <div class="grid-card" style="border-color: rgba(255,255,255,0.1);">
+        <span class="tag">Backend · out of scope</span>
+        <h3>Orchestration only</h3>
+        <p>Backend services act <strong>only as orchestration</strong> (e.g. PaymentIntent creation) and do <strong>not influence</strong> how cardholder data is captured or transmitted.</p>
       </div>
     </div>
 
-    <p class="fragment" style="font-size: 0.6em; color: var(--text-muted); text-align: center; margin-top: 32px;">Judgment, taste, observability, and system design will matter <strong>more than ever</strong>.</p>
+    <div class="anchor-card fragment" style="margin-top: 24px; padding: 22px 28px;">
+      <p style="font-size: 0.8em;">CDE = the isolated payment page + its controls. Everything else stays out of scope by design.</p>
+    </div>
+    <div class="slide-footer">08 · proposal</div>
   </section>
 
-  <!-- SLIDE 5: Our Goal -->
-  <section data-transition="slide">
-    <div class="accent-line"></div>
-    <span class="subtitle">Measuring success</span>
-    <h2>Our Goal</h2>
-
-    <div style="background: var(--bg-card); border: 1px solid rgba(16,185,129,0.15); border-radius: 16px; padding: 36px; text-align: center; margin: 24px 0;">
-      <p style="font-size: 1.4em; font-weight: 700; color: #fff; margin: 0;">Cut cycle time in half across our system</p>
-      <p style="font-size: 0.7em; color: var(--text-muted); margin: 8px 0 0 0;">From idea to production</p>
-    </div>
-
-    <p style="font-size: 0.65em; color: #999;">*All teams' cycle times will be different. The 50% is a directional target for the system, not a uniform bar.</p>
-
-    <div class="metric-row fragment">
-      <div class="metric-pill">Cycle Time</div>
-      <div class="metric-pill">Lead Time for Change</div>
-      <div class="metric-pill">AI Contribution to Delivery</div>
-      <div class="metric-pill">CFR</div>
-      <div class="metric-pill">MTTR</div>
-    </div>
-
-    <p class="fragment" style="font-size: 0.65em; color: var(--accent-warm); margin-top: 20px;"><strong>Speed ≠ Impact.</strong> We don't improve cycle time by coding faster if work is waiting on decisions, design iteration, or PR reviews.</p>
-  </section>
-
-  <!-- SLIDE 6: What changes -->
-  <section data-transition="slide">
-    <div class="accent-line"></div>
-    <span class="subtitle">12-month horizon</span>
-    <h2>What Changes</h2>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px;">
-      <div class="grid-card fragment">
-        <h3 style="color: var(--accent);">⚡ Speed</h3>
-        <p>What feels fast today will feel slow in 12 months. AI compresses cycle times from idea to production.</p>
-      </div>
-      <div class="grid-card fragment">
-        <h3 style="color: var(--accent);">↗ Scope</h3>
-        <p>What required multiple people or weeks of work may be achievable by one person in days.</p>
-      </div>
-      <div class="grid-card fragment">
-        <h3 style="color: var(--accent);">↓ Cost</h3>
-        <p>Building and maintaining gets cheaper. This changes how we think about investment and trade-offs.</p>
-      </div>
-      <div class="grid-card fragment">
-        <h3 style="color: var(--accent);">✦ Quality</h3>
-        <p>Speed does not come at the expense of quality. It raises the bar. Fix more, including the small paper cuts.</p>
-      </div>
-    </div>
-
-    <p class="fragment" style="font-size: 0.7em; margin-top: 20px; color: #ccc;"><strong>Your ability to have impact will grow.</strong> A designer who can ship real UI, an engineer who can shape product direction, a PM who can build prototypes. The lines between disciplines will blur — not because everyone does everything, but because more people can contribute meaningfully beyond their core discipline.</p>
-  </section>
-
-  <!-- SLIDE 7: Watch outs -->
-  <section data-transition="slide">
-    <div class="accent-line"></div>
-    <span class="subtitle">Eyes open</span>
-    <h2>What We're Watching For</h2>
-
-    <div style="margin-top: 24px;">
-      <div class="risk-card fragment">
-        <h3>Cognitive overload</h3>
-        <p>Guiding agents is intense. We need to be conscious of the mental load on builders.</p>
-      </div>
-      <div class="risk-card fragment">
-        <h3>Accountability drift</h3>
-        <p>People may shift responsibility onto AI. This is not acceptable. We own our systems — AI does not.</p>
-      </div>
-      <div class="risk-card fragment">
-        <h3>Complexity creep</h3>
-        <p>We could build more than we can maintain. Discipline in what we choose to build matters <em>more</em>, not less.</p>
-      </div>
-      <div class="risk-card fragment">
-        <h3>Principles must transfer</h3>
-        <p>Our engineering principles (avoid big bangs, instrumentation, etc.) must evolve into the agentic workflow.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SLIDE 8: Q2 Plan -->
-  <section data-transition="slide">
-    <div class="accent-line"></div>
-    <span class="subtitle">Next steps — Q2 2026</span>
-    <h2 style="margin-bottom: 0.3em;">Scaling This Out</h2>
-    <p style="font-size: 0.65em; color: #999; margin-bottom: 16px;">Move from experimentation → consistent adoption. Demonstrate AI is improving how we build.</p>
-
-    <div class="timeline" style="margin-top: 16px;">
-      <div class="timeline-item fragment">
-        <h3>Form the Momentum team</h3>
-        <p>Tomek &amp; Pawel (principal eng), JD, Aoife, Design (Mikey &amp; Rich), PM — dedicated AI enablement across PD</p>
-      </div>
-      <div class="timeline-item fragment">
-        <h3>Baseline every team</h3>
-        <p>Each team defines, tracks, and owns: cycle time, lead time, AI contribution to delivery</p>
-      </div>
-      <div class="timeline-item fragment">
-        <h3>Claude tooling rollout</h3>
-        <p>Org-wide adoption plan including cost management and usage. Everyone uses AI tools daily.</p>
-      </div>
-      <div class="timeline-item fragment">
-        <h3>Run controlled experiments</h3>
-        <p>Select teams compare delivery with and without AI on well-understood work. Measure outcomes.</p>
-      </div>
-      <div class="timeline-item fragment">
-        <h3>Get everyone hands-on</h3>
-        <p>EM+ complete 3 AI-assisted PRs · Monthly AI-first build day · Designers and PMs prototype or ship a UI change with Claude</p>
-      </div>
-      <div class="timeline-item fragment" style="margin-bottom: 0;">
-        <h3>End-of-Q2 Momentum shoutout</h3>
-        <p>Showcase impact, share learnings, set direction for Q3</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SLIDE 9: Closing -->
+  <!-- SLIDE 10: Closing -->
   <section class="title-slide" data-transition="fade">
-    <div class="accent-line-center fragment fade-in" data-fragment-index="0"></div>
-    <h2 class="fragment fade-up" data-fragment-index="0" style="font-size: 2.2em; margin-bottom: 0.3em;">Our biggest constraint was never ideas.<br>It was capacity.<br><span class="fragment highlight-current-green" data-fragment-index="1" style="background: linear-gradient(135deg, var(--accent), var(--accent-warm)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">That just changed.</span></h2>
-    <p class="fragment fade-up" data-fragment-index="2" style="font-size: 1em; color: #ccc; font-weight: 400; max-width: 700px; margin: 28px auto 0; line-height: 1.5;">The game has changed.</p>
-    <div class="fragment fade-up" data-fragment-index="3" style="margin-top: 48px; display: flex; gap: 40px; justify-content: center; align-items: center;">
+    <div class="accent-line-center"></div>
+    <span class="subtitle" style="margin-bottom: 20px;">What we're asking</span>
+    <h2 style="font-size: 1.8em; margin-bottom: 0.3em;">Can we agree the CDE<br>is the <span style="background: linear-gradient(135deg, var(--accent), var(--accent-warm)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">payment page environment</span>?</h2>
+
+    <p class="fragment fade-up" style="font-size: 0.7em; color: #bbb; max-width: 760px; margin: 28px auto 0; line-height: 1.5;">We'll put strong, auditable controls around that surface. The backend orchestrates — it does not touch cardholder data — and should remain out of scope.</p>
+
+    <div class="fragment fade-up" style="margin-top: 44px; display: flex; gap: 36px; justify-content: center; align-items: center;">
       <div style="text-align: center;">
-        <div style="font-size: 2em; font-weight: 800; color: var(--accent);">50%</div>
-        <div style="font-size: 0.5em; color: #666;">cycle time reduction</div>
+        <div style="font-size: 1.6em; font-weight: 800; color: var(--accent);">Elements</div>
+        <div style="font-size: 0.45em; color: #666; letter-spacing: 0.1em; text-transform: uppercase;">CNP capture</div>
       </div>
-      <div style="width: 1px; height: 50px; background: rgba(255,255,255,0.1);"></div>
+      <div style="width: 1px; height: 48px; background: rgba(255,255,255,0.1);"></div>
       <div style="text-align: center;">
-        <div style="font-size: 2em; font-weight: 800; color: var(--accent-warm);">Q2</div>
-        <div style="font-size: 0.5em; color: #666;">we start scaling</div>
+        <div style="font-size: 1.6em; font-weight: 800; color: var(--accent-warm);">Terminal</div>
+        <div style="font-size: 0.45em; color: #666; letter-spacing: 0.1em; text-transform: uppercase;">CP capture</div>
       </div>
-      <div style="width: 1px; height: 50px; background: rgba(255,255,255,0.1);"></div>
+      <div style="width: 1px; height: 48px; background: rgba(255,255,255,0.1);"></div>
       <div style="text-align: center;">
-        <div style="font-size: 2em; font-weight: 800; color: #fff;">All of PD</div>
-        <div style="font-size: 0.5em; color: #666;">product · design · engineering</div>
+        <div style="font-size: 1.6em; font-weight: 800; color: #fff;">No CHD</div>
+        <div style="font-size: 0.45em; color: #666; letter-spacing: 0.1em; text-transform: uppercase;">on Phorest systems</div>
       </div>
     </div>
-    <p class="fragment fade-in" data-fragment-index="4" style="font-size: 0.55em; color: #555; margin-top: 48px;">This is the founding document, not the finished state. We iterate as we learn.</p>
   </section>
 
 </div>
@@ -571,7 +612,7 @@
     hash: true,
     slideNumber: 'c/t',
     width: 1200,
-    height: 700,
+    height: 720,
     margin: 0.04,
     transition: 'slide',
     transitionSpeed: 'default',
